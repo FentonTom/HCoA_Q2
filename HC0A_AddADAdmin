@@ -6,7 +6,7 @@ $AUsers = "Dbind","Abind","Djoin","Tadmin","HCS"
 $GrName = "Tenant Admins"
 foreach ($i in $AUsers) {
     New-ADUser -Name $i -Enabled $true -CannotChangePassword $true -PasswordNeverExpires $true -AccountPassword (ConvertTo-SecureString "VMware1!VMware1!" -AsPlainText -force) 
-    Echo Created user $i
+    Echo "Created user $i"
 }
 
 #Create new domain group
@@ -16,16 +16,16 @@ New-ADGroup -Name $GrName -GroupScope 2
 #Add Users to AD Group
 foreach ($i in $AUsers) {
      Add-ADGroupMember -Identity $GrName -Members $i  
-     Echo Added $i to $GrName
+     Echo "Added $i to $GrName"
 }
 
 # list proerties of added usrs
 Echo Listing properties of added users
 foreach ($i in $AUsers) {
-    Echo Created user $i
+    Echo "Created user $i"
     Get-ADUser -identity $i
 }
 
 # list members of a group
-Echo members of #GrName
+Echo "members of $GrName"
 Get-ADGroupMember -Identity $GrName
