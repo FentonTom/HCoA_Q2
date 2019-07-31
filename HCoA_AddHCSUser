@@ -1,0 +1,31 @@
+#---------
+# This script will create hcsmadm users, create hcsmadmGRP,  add  users to the groups and print out the properties of the users and group members
+# Create AD accounts for all the users in $AUsers
+#---------
+#Number of accounts at 15 accounts per course
+$n=2*15
+$count=1..$n
+$GrName = "hcsmadmGroup"
+$usrPrefix="hcsmadm"
+
+#create new AD group
+New-ADGroup -Name $GrName -GroupScope 2
+
+
+foreach ($i in $count) {
+    New-ADUser -Name "$usrPrefix$i" -Enabled $true -CannotChangePassword $true -PasswordNeverExpires $true -AccountPassword (ConvertTo-SecureString "VMware1!VMware1!" -AsPlainText -force) 
+    Echo "Created user $i"
+    Add-ADGroupMember -Identity $GrName -Members "$usrPrefix$i"  
+    Echo "Added $usrPrefix$i to Group $GrName"
+}
+
+# list members of a group
+Echo "Listing members of $GrName"
+Get-ADGroupMember -Identity $GrName
+
+# Just the names and distiguishedName of the members of a group
+$members = Get-ADGroupMember $GrName
+foreach ($member in $members){
+$dn = $member.DistinguishedName
+Get-ADUser -Filter {DistinguishedName -like $dn} -Properties name,distinguishedName | Select name,distinguishedName
+}
