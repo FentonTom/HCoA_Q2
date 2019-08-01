@@ -19,6 +19,11 @@ foreach ($i in $AUsers) {
      Echo "Added $i to $GrName"
 }
 
+#Add Users to AD Domain Admin Group
+Add-ADGroupMember -Identity "Domain Admins" -Members "Dbind"  
+Add-ADGroupMember -Identity "Domain Admins" -Members "Abind"  
+
+
 # list proerties of added usrs
 Echo Listing properties of added users
 foreach ($i in $AUsers) {
